@@ -8,9 +8,9 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "lab3-tfstate-lab3-02-09-2026"   # you create once
-    key    = "tokyo/terraform.tfstate"
-    region = "us-east-1"
+    bucket  = "lab3-tfstate-lab3-02-09-2026" # you create once
+    key     = "tokyo/terraform.tfstate"
+    region  = "us-east-1"
     encrypt = true
   }
 }

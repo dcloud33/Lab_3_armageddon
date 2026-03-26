@@ -23,7 +23,7 @@ variable "user_name" {
 
 variable "account_ID" {
   type    = string
-default = "724772093504"
+  default = "724772093504"
 
 }
 
@@ -91,7 +91,7 @@ variable "enable_saopaulo_accept" {
 }
 
 variable "origin_secret" {
-  type      = string
+  type    = string
   default = "cd5161ff7a46d7584f5f5326477291373320fb84ae318577d83fff1a531f8fcd"
 }
 

@@ -23,3 +23,19 @@ variable "saopaulo_vpc_cidr" {
   type = string
   default = "10.70.0.0/16"
 }
+
+variable "name_prefix" {
+  type = string
+}
+
+variable "vpc_id" {
+  type = string
+}
+
+variable "private_subnet_ids" {
+  type = list(string)
+}
+
+variable "app_sg_id" {
+  type = string
+}

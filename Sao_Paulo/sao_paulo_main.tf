@@ -6,7 +6,7 @@ locals {
 }
 
 module "network" {
-  source               = "./modules/network"
+  source               = "../modules/network"
   name_prefix          = local.name_prefix
   vpc_cidr             = var.vpc_cidr
   public_subnet_cidrs  = var.public_subnet_cidrs
@@ -19,7 +19,7 @@ module "network" {
 
 
 module "compute" {
-  source = "./modules/compute"
+  source = "../modules/compute"
 
   name_prefix        = local.name_prefix
   vpc_id             = module.network.vpc_id
@@ -79,13 +79,13 @@ resource "aws_sns_topic_subscription" "my_sns_sub01" {
 
 
 ############ SECRETS MANAGER FOR DB CREDENTIALS #####################
-data "aws_secretsmanager_secret" "my_db_secret" {
-  name                    = "lab3/rds/mysql"
-}
+# data "aws_secretsmanager_secret" "my_db_secret" {
+#   name                    = "lab3/rds/mysql"
+# }
 
-data "aws_secretsmanager_secret_version" "my_db_secret_version" {
-  secret_id = data.aws_secretsmanager_secret.my_db_secret.id
-}
+# data "aws_secretsmanager_secret_version" "my_db_secret_version" {
+#   secret_id = data.aws_secretsmanager_secret.my_db_secret.id
+# }
 
 locals {
   db = jsondecode(data.aws_secretsmanager_secret_version.my_db_secret_version.secret_string)

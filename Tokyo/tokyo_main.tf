@@ -45,16 +45,18 @@ module "compute" {
 
 
 module "data" {
-  source =  "../modules/data"
+  source = "../modules/data"
 
-  name_prefix         = local.name_prefix
-  vpc_id              = module.network.vpc_id
-  private_subnet_ids   = module.network.private_subnet_ids
+  name_prefix        = local.name_prefix
+  vpc_id             = module.network.vpc_id
+  private_subnet_ids = module.network.private_subnet_ids
+  app_sg_id          = module.compute.app_sg_id
 
-  app_sg_id           = module.compute.app_sg_id   # or wherever your EC2 SG ID is
-  db_password         = var.db_password
+  rds_password      = var.rds_password
+  rds_db_name       = var.rds_db_name
+  rds_user_name     = var.rds_user_name
 
-  saopaulo_vpc_cidr = data.terraform_remote_state.saopaulo[0].outputs.sp_vpc_cidr
+  saopaulo_vpc_cidr = data.terraform_remote_state.saopaulo.outputs.sp_vpc_cidr
 }
 
 
@@ -122,7 +124,7 @@ resource "aws_cloudwatch_dashboard" "my_cloudwatch_dashboard01" {
           title  = "My ALB: Target Response Time"
         }
       },
-      
+
     ]
   })
 }
@@ -208,7 +210,7 @@ resource "aws_ec2_transit_gateway" "tgw" {
   description                     = "Tokyo-tgw"
   default_route_table_association = "enable"
   default_route_table_propagation = "enable"
-  tags = { Name = "${local.name_prefix}-tgw" }
+  tags                            = { Name = "${local.name_prefix}-tgw" }
 }
 
 resource "aws_ec2_transit_gateway_vpc_attachment" "tgw_attach" {
@@ -219,8 +221,8 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "tgw_attach" {
 }
 
 resource "aws_ec2_transit_gateway_peering_attachment_accepter" "accept" {
-  count = var.enable_saopaulo_accept ? 1 : 0
-  transit_gateway_attachment_id = data.terraform_remote_state.saopaulo[0].outputs.tgw_peering_attachment_id
+  count                         = var.enable_saopaulo_accept ? 1 : 0
+  transit_gateway_attachment_id = data.terraform_remote_state.saopaulo.outputs.tgw_peering_attachment_id
 
   tags = { Name = "${local.name_prefix}-tgw-peer-accept" }
 }
@@ -228,7 +230,7 @@ resource "aws_ec2_transit_gateway_peering_attachment_accepter" "accept" {
 resource "aws_ec2_transit_gateway_route" "tokyo_to_saopaulo_via_peering" {
   count = var.enable_saopaulo_accept ? 1 : 0
 
-  destination_cidr_block         = data.terraform_remote_state.saopaulo[0].outputs.sp_vpc_cidr
+  destination_cidr_block         = data.terraform_remote_state.saopaulo.outputs.sp_vpc_cidr
   transit_gateway_route_table_id = aws_ec2_transit_gateway.tgw.association_default_route_table_id
   transit_gateway_attachment_id  = aws_ec2_transit_gateway_peering_attachment_accepter.accept[0].transit_gateway_attachment_id
 
@@ -237,9 +239,9 @@ resource "aws_ec2_transit_gateway_route" "tokyo_to_saopaulo_via_peering" {
 
 
 resource "aws_route" "to_saopaulo_via_tgw" {
-  for_each               = var.enable_saopaulo_accept ? toset(module.network.private_route_table_ids) : []
+  for_each = var.enable_saopaulo_accept ? toset(module.network.private_route_table_ids) : toset([])
   route_table_id         = each.value
-  destination_cidr_block = data.terraform_remote_state.saopaulo[0].outputs.sp_vpc_cidr
+  destination_cidr_block = data.terraform_remote_state.saopaulo.outputs.sp_vpc_cidr
   transit_gateway_id     = aws_ec2_transit_gateway.tgw.id
 
   depends_on = [aws_ec2_transit_gateway_vpc_attachment.tgw_attach]

@@ -1,35 +1,47 @@
-output "tokyo_alb_dns_name" { 
-    value = module.compute.alb_dns_name 
-    
-    }
-
-# output "tokyo_vpc_cidr"     { value = aws_vpc.vpc.cidr_block }
-
-output "tokyo_tgw_id"       { 
-    value = module.transit.tgw_id 
-    }
-
-output "tokyo_tgw_owner_id" {
-  value = data.aws_caller_identity.current.account_id
-}
+###################################
+# NETWORK OUTPUTS
+###################################
 
 output "tokyo_vpc_id" {
   value = module.network.vpc_id
 }
 
-output "tokyo_vpc_cidr" {
-  value = module.network.vpc_cidr
+output "tokyo_private_subnet_ids" {
+  value = module.network.private_subnet_ids
 }
 
-output "tokyo_rds_endpoint" { 
-    value = aws_db_instance.my_instance_rds.address
-    }
+###################################
+# COMPUTE OUTPUTS
+###################################
 
-output "tokyo_alb_arn_suffix" {
-  value = module.compute.alb_arn_suffix
+output "tokyo_app_sg_id" {
+  value = module.compute.app_sg_id
 }
 
-output "tokyo_db_secret_arn" {
+###################################
+# DATA (RDS) OUTPUTS
+###################################
+
+output "tokyo_rds_endpoint" {
+  value = module.data.db_endpoint
+}
+
+output "tokyo_rds_port" {
+  value = module.data.db_port
+}
+
+output "tokyo_rds_sg_id" {
+  value = module.data.db_sg_id
+}
+
+output "tokyo_rds_secret_arn" {
   value = module.data.db_secret_arn
 }
 
+###################################
+# ACCOUNT INFO (OPTIONAL)
+###################################
+
+output "tokyo_account_id" {
+  value = data.aws_caller_identity.aws_caller.account_id
+}

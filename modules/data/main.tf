@@ -10,7 +10,7 @@ locals {
 resource "aws_security_group" "my_rds_sg" {
   name        = "my-rds-sg"
   description = "RDS security group"
-  vpc_id      = module.network.vpc_id
+  vpc_id      = var.vpc_id
 
   tags = {
     Name = "my-rds-sg01"
@@ -34,7 +34,7 @@ resource "aws_security_group_rule" "ec2_to_rds_access" {
   from_port                = 3306
   protocol                 = "tcp"
   to_port                  = 3306
-  source_security_group_id = module.compute.ec2_sg_id
+  source_security_group_id = var.app_sg_id
 }
 
 resource "aws_vpc_security_group_egress_rule" "rds_outbound" {
@@ -48,7 +48,7 @@ resource "aws_vpc_security_group_egress_rule" "rds_outbound" {
 
 resource "aws_db_subnet_group" "my_rds_subnet_group" {
   name        = "my-rds-subnet-group"
-  subnet_ids  = module.network.private_subnet_ids
+  subnet_ids  = var.private_subnet_ids
   description = "this will have the RDS in the private subnet"
 
   tags = {
@@ -70,7 +70,7 @@ resource "aws_db_instance" "my_instance_rds" {
 
 
   db_subnet_group_name   = aws_db_subnet_group.my_rds_subnet_group.name
-  vpc_security_group_ids = [aws_security_group.my-rds-sg.id]
+  vpc_security_group_ids = [aws_security_group.my_rds_sg.id]
 
   publicly_accessible = false
   skip_final_snapshot = true

@@ -1,5 +1,4 @@
 data "terraform_remote_state" "saopaulo" {
-  count   = var.enable_saopaulo_accept ? 1 : 0
   backend = "s3"
   config = {
     bucket = "lab3-tfstate-lab3-02-09-2026"
