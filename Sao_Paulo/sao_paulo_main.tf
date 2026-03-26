@@ -6,7 +6,7 @@ locals {
 }
 
 module "network" {
-  source               = "modules/network"
+  source               = "./modules/network"
   name_prefix          = local.name_prefix
   vpc_cidr             = var.vpc_cidr
   public_subnet_cidrs  = var.public_subnet_cidrs
@@ -19,7 +19,7 @@ module "network" {
 
 
 module "compute" {
-  source = "modules/compute"
+  source = "./modules/compute"
 
   name_prefix        = local.name_prefix
   vpc_id             = module.network.vpc_id
