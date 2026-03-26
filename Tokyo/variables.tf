@@ -43,6 +43,12 @@ variable "rds_password" {
   default   = "mynewpassword1234!!"
 }
 
+variable "saopaulo_vpc_cidr" {
+  description = "CIDR block for Sao Paulo VPC (used before remote state exists)"
+  type        = string
+  default     = "10.70.0.0/16"
+}
+
 variable "public_subnet_cidrs" {
   description = "Public subnet CIDRs."
   type        = list(string)

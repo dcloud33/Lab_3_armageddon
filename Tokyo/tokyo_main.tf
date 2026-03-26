@@ -56,7 +56,7 @@ module "data" {
   rds_db_name       = var.rds_db_name
   rds_user_name     = var.rds_user_name
 
-  saopaulo_vpc_cidr = data.terraform_remote_state.saopaulo.outputs.sp_vpc_cidr
+  saopaulo_vpc_cidr = var.enable_saopaulo_accept? data.terraform_remote_state.saopaulo.outputs.sp_vpc_cidr: var.saopaulo_vpc_cidr
 }
 
 
