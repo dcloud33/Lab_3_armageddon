@@ -63,7 +63,7 @@ module "data" {
 
 ############# CLOUDWATCH LOG GROUP ##############
 resource "aws_cloudwatch_log_group" "my_log_group" {
-  name              = "/aws/ec2/lab-rds-app"
+  name              = "/aws/ec2/lab-rds-app2"
   retention_in_days = 7
 }
 
