@@ -55,15 +55,15 @@ pipeline {
             steps {
                 script {
                     if (params.STACK == 'Tokyo') {
-                        sh 'terraform -chdir=LAB-3/Tokyo init -input=false'
+                        sh 'terraform -chdir=Tokyo init -input=false'
                     }
 
                     if (params.STACK == 'Sao_Paulo') {
-                        sh 'terraform -chdir=LAB-3/Sao_Paulo init -input=false'
+                        sh 'terraform -chdir=Sao_Paulo init -input=false'
                     }
 
                     if (params.STACK == 'Global') {
-                        sh 'terraform -chdir=LAB-3/Global init -input=false'
+                        sh 'terraform -chdir=Global init -input=false'
                     }
                 }
             }
@@ -76,15 +76,15 @@ pipeline {
             steps {
                 script {
                     if (params.STACK == 'Tokyo') {
-                        sh 'terraform -chdir=LAB-3/Tokyo validate'
+                        sh 'terraform -chdir=Tokyo validate'
                     }
 
                     if (params.STACK == 'Sao_Paulo') {
-                        sh 'terraform -chdir=LAB-3/Sao_Paulo validate'
+                        sh 'terraform -chdir=Sao_Paulo validate'
                     }
 
                     if (params.STACK == 'Global') {
-                        sh 'terraform -chdir=LAB-3/Global validate'
+                        sh 'terraform -chdir=Global validate'
                     }
                 }
             }
@@ -96,7 +96,7 @@ pipeline {
                     if (params.STACK == 'Tokyo') {
                         if (params.ACTION == 'destroy') {
                             sh """
-                              terraform -chdir=LAB-3/Tokyo plan \
+                              terraform -chdir=Tokyo plan \
                                 -destroy \
                                 -input=false \
                                 -var="enable_saopaulo_accept=${params.ENABLE_SAOPAULO_ACCEPT}" \
@@ -104,7 +104,7 @@ pipeline {
                             """
                         } else {
                             sh """
-                              terraform -chdir=LAB-3/Tokyo plan \
+                              terraform -chdir=Tokyo plan \
                                 -input=false \
                                 -var="enable_saopaulo_accept=${params.ENABLE_SAOPAULO_ACCEPT}" \
                                 -out=tfplan
@@ -115,14 +115,14 @@ pipeline {
                     if (params.STACK == 'Sao_Paulo') {
                         if (params.ACTION == 'destroy') {
                             sh '''
-                              terraform -chdir=LAB-3/Sao_Paulo plan \
+                              terraform -chdir=Sao_Paulo plan \
                                 -destroy \
                                 -input=false \
                                 -out=tfplan
                             '''
                         } else {
                             sh '''
-                              terraform -chdir=LAB-3/Sao_Paulo plan \
+                              terraform -chdir=Sao_Paulo plan \
                                 -input=false \
                                 -out=tfplan
                             '''
@@ -132,14 +132,14 @@ pipeline {
                     if (params.STACK == 'Global') {
                         if (params.ACTION == 'destroy') {
                             sh '''
-                              terraform -chdir=LAB-3/Global plan \
+                              terraform -chdir=Global plan \
                                 -destroy \
                                 -input=false \
                                 -out=tfplan
                             '''
                         } else {
                             sh '''
-                              terraform -chdir=LAB-3/Global plan \
+                              terraform -chdir=Global plan \
                                 -input=false \
                                 -out=tfplan
                             '''
@@ -165,15 +165,15 @@ pipeline {
             steps {
                 script {
                     if (params.STACK == 'Tokyo') {
-                        sh 'terraform -chdir=LAB-3/Tokyo apply -input=false -auto-approve tfplan'
+                        sh 'terraform -chdir=Tokyo apply -input=false -auto-approve tfplan'
                     }
 
                     if (params.STACK == 'Sao_Paulo') {
-                        sh 'terraform -chdir=LAB-3/Sao_Paulo apply -input=false -auto-approve tfplan'
+                        sh 'terraform -chdir=Sao_Paulo apply -input=false -auto-approve tfplan'
                     }
 
                     if (params.STACK == 'Global') {
-                        sh 'terraform -chdir=LAB-3/Global apply -input=false -auto-approve tfplan'
+                        sh 'terraform -chdir=Global apply -input=false -auto-approve tfplan'
                     }
                 }
             }
@@ -187,17 +187,17 @@ pipeline {
                 script {
                     if (params.STACK == 'Tokyo') {
                         echo 'Destroying Tokyo last is recommended.'
-                        sh 'terraform -chdir=LAB-3/Tokyo apply -input=false -auto-approve tfplan'
+                        sh 'terraform -chdir=Tokyo apply -input=false -auto-approve tfplan'
                     }
 
                     if (params.STACK == 'Sao_Paulo') {
                         echo 'Destroying Sao_Paulo after Global is recommended.'
-                        sh 'terraform -chdir=LAB-3/Sao_Paulo apply -input=false -auto-approve tfplan'
+                        sh 'terraform -chdir=Sao_Paulo apply -input=false -auto-approve tfplan'
                     }
 
                     if (params.STACK == 'Global') {
                         echo 'Destroying Global first is recommended.'
-                        sh 'terraform -chdir=LAB-3/Global apply -input=false -auto-approve tfplan'
+                        sh 'terraform -chdir=Global apply -input=false -auto-approve tfplan'
                     }
                 }
             }
