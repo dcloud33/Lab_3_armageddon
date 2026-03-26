@@ -19,7 +19,6 @@ pipeline {
     }
 
     stages {
-
         stage('Checkout Code') {
             steps {
                 checkout scm
@@ -29,6 +28,8 @@ pipeline {
         stage('Verify Tools') {
             steps {
                 sh '''
+                  whoami
+                  pwd
                   terraform version
                   aws --version
                   aws sts get-caller-identity
@@ -44,11 +45,7 @@ pipeline {
                     }
 
                     if (params.ACTION == 'destroy') {
-                        echo "Recommended destroy order for Lab 3: Global -> Sao_Paulo -> Tokyo"
-                    }
-
-                    if (params.ACTION == 'apply' && params.STACK == 'Global') {
-                        echo "Reminder: Global should normally be applied after Tokyo and Sao_Paulo are already created."
+                        echo 'Recommended destroy order: Global -> Sao_Paulo -> Tokyo'
                     }
                 }
             }
@@ -58,15 +55,15 @@ pipeline {
             steps {
                 script {
                     if (params.STACK == 'Tokyo') {
-                        sh 'terraform -chdir=lab-3/Tokyo init -input=false'
+                        sh 'terraform -chdir=LAB-3/Tokyo init -input=false'
                     }
 
                     if (params.STACK == 'Sao_Paulo') {
-                        sh 'terraform -chdir=lab-3/Sao_Paulo init -input=false'
+                        sh 'terraform -chdir=LAB-3/Sao_Paulo init -input=false'
                     }
 
                     if (params.STACK == 'Global') {
-                        sh 'terraform -chdir=lab-3/Global init -input=false'
+                        sh 'terraform -chdir=LAB-3/Global init -input=false'
                     }
                 }
             }
@@ -79,15 +76,15 @@ pipeline {
             steps {
                 script {
                     if (params.STACK == 'Tokyo') {
-                        sh 'terraform -chdir=lab-3/Tokyo validate'
+                        sh 'terraform -chdir=LAB-3/Tokyo validate'
                     }
 
                     if (params.STACK == 'Sao_Paulo') {
-                        sh 'terraform -chdir=lab-3/Sao_Paulo validate'
+                        sh 'terraform -chdir=LAB-3/Sao_Paulo validate'
                     }
 
                     if (params.STACK == 'Global') {
-                        sh 'terraform -chdir=lab-3/Global validate'
+                        sh 'terraform -chdir=LAB-3/Global validate'
                     }
                 }
             }
@@ -98,34 +95,34 @@ pipeline {
                 script {
                     if (params.STACK == 'Tokyo') {
                         if (params.ACTION == 'destroy') {
-                            sh '''
-                              terraform -chdir=lab-3/Tokyo plan \
+                            sh """
+                              terraform -chdir=LAB-3/Tokyo plan \
                                 -destroy \
                                 -input=false \
-                                -var="enable_saopaulo_accept=${ENABLE_SAOPAULO_ACCEPT}" \
+                                -var="enable_saopaulo_accept=${params.ENABLE_SAOPAULO_ACCEPT}" \
                                 -out=tfplan
-                            '''
+                            """
                         } else {
-                            sh '''
-                              terraform -chdir=lab-3/Tokyo plan \
+                            sh """
+                              terraform -chdir=LAB-3/Tokyo plan \
                                 -input=false \
-                                -var="enable_saopaulo_accept=${ENABLE_SAOPAULO_ACCEPT}" \
+                                -var="enable_saopaulo_accept=${params.ENABLE_SAOPAULO_ACCEPT}" \
                                 -out=tfplan
-                            '''
+                            """
                         }
                     }
 
                     if (params.STACK == 'Sao_Paulo') {
                         if (params.ACTION == 'destroy') {
                             sh '''
-                              terraform -chdir=lab-3/Sao_Paulo plan \
+                              terraform -chdir=LAB-3/Sao_Paulo plan \
                                 -destroy \
                                 -input=false \
                                 -out=tfplan
                             '''
                         } else {
                             sh '''
-                              terraform -chdir=lab-3/Sao_Paulo plan \
+                              terraform -chdir=LAB-3/Sao_Paulo plan \
                                 -input=false \
                                 -out=tfplan
                             '''
@@ -135,14 +132,14 @@ pipeline {
                     if (params.STACK == 'Global') {
                         if (params.ACTION == 'destroy') {
                             sh '''
-                              terraform -chdir=lab-3/Global plan \
+                              terraform -chdir=LAB-3/Global plan \
                                 -destroy \
                                 -input=false \
                                 -out=tfplan
                             '''
                         } else {
                             sh '''
-                              terraform -chdir=lab-3/Global plan \
+                              terraform -chdir=LAB-3/Global plan \
                                 -input=false \
                                 -out=tfplan
                             '''
@@ -157,7 +154,7 @@ pipeline {
                 expression { params.ACTION == 'apply' || params.ACTION == 'destroy' }
             }
             steps {
-                input message: "Proceed with ${params.ACTION} for ${params.STACK}?", ok: "Continue"
+                input message: "Proceed with ${params.ACTION} for ${params.STACK}?", ok: 'Continue'
             }
         }
 
@@ -168,15 +165,15 @@ pipeline {
             steps {
                 script {
                     if (params.STACK == 'Tokyo') {
-                        sh 'terraform -chdir=lab-3/Tokyo apply -input=false -auto-approve tfplan'
+                        sh 'terraform -chdir=LAB-3/Tokyo apply -input=false -auto-approve tfplan'
                     }
 
                     if (params.STACK == 'Sao_Paulo') {
-                        sh 'terraform -chdir=lab-3/Sao_Paulo apply -input=false -auto-approve tfplan'
+                        sh 'terraform -chdir=LAB-3/Sao_Paulo apply -input=false -auto-approve tfplan'
                     }
 
                     if (params.STACK == 'Global') {
-                        sh 'terraform -chdir=lab-3/Global apply -input=false -auto-approve tfplan'
+                        sh 'terraform -chdir=LAB-3/Global apply -input=false -auto-approve tfplan'
                     }
                 }
             }
@@ -189,18 +186,18 @@ pipeline {
             steps {
                 script {
                     if (params.STACK == 'Tokyo') {
-                        echo 'Destroying Tokyo. This should normally be the LAST destroy step.'
-                        sh 'terraform -chdir=lab-3/Tokyo apply -input=false -auto-approve tfplan'
+                        echo 'Destroying Tokyo last is recommended.'
+                        sh 'terraform -chdir=LAB-3/Tokyo apply -input=false -auto-approve tfplan'
                     }
 
                     if (params.STACK == 'Sao_Paulo') {
-                        echo 'Destroying Sao_Paulo. Global should normally be destroyed first.'
-                        sh 'terraform -chdir=lab-3/Sao_Paulo apply -input=false -auto-approve tfplan'
+                        echo 'Destroying Sao_Paulo after Global is recommended.'
+                        sh 'terraform -chdir=LAB-3/Sao_Paulo apply -input=false -auto-approve tfplan'
                     }
 
                     if (params.STACK == 'Global') {
-                        echo 'Destroying Global first.'
-                        sh 'terraform -chdir=lab-3/Global apply -input=false -auto-approve tfplan'
+                        echo 'Destroying Global first is recommended.'
+                        sh 'terraform -chdir=LAB-3/Global apply -input=false -auto-approve tfplan'
                     }
                 }
             }
@@ -209,13 +206,13 @@ pipeline {
 
     post {
         always {
-            echo "Pipeline finished."
+            echo 'Pipeline finished.'
         }
         success {
             echo "SUCCESS: ${params.STACK} ${params.ACTION}"
         }
         failure {
-            echo "FAILED: Check Jenkins console output carefully."
+            echo 'FAILED: Check Jenkins console output carefully.'
         }
     }
 }
