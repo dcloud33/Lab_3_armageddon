@@ -2,6 +2,17 @@ variable "aws_region" {
   description = "AWS Region that I'd used because...I'm forgetful"
   default     = "sa-east-1"
 }
+
+variable "region_name"{
+  type = strinig
+  default = "saopaulo"
+}
+
+variable "enable_tokyo_route" {
+  type    = bool
+  default = false
+}
+
 variable "user_name" {
   type    = string
   default = "Sao_Paulo_user"

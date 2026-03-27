@@ -1,6 +1,6 @@
 ########## Locals ########
 locals {
-  name_prefix = var.user_name
+  name_prefix = "tokyo-user"
 
 }
 
@@ -40,6 +40,9 @@ module "compute" {
   alarm_actions = [aws_sns_topic.my_sns_topic.arn]
   ok_actions    = [aws_sns_topic.my_sns_topic.arn]
 
+  instance_profile_name = "tokyo-instance-profile02"
+  cw_policy_name        = "tokyo-cw-put-db-conn-metric2"
+
   tags = { env = "tokyo" }
 }
 
@@ -63,7 +66,7 @@ module "data" {
 
 ############# CLOUDWATCH LOG GROUP ##############
 resource "aws_cloudwatch_log_group" "my_log_group" {
-  name              = "/aws/ec2/lab-rds-app2"
+  name              = "/aws/ec2/${var.region_name}-lab-rds-app"
   retention_in_days = 7
 }
 

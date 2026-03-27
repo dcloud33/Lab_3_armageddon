@@ -1,6 +1,6 @@
 ########## Locals ########
 locals {
-  name_prefix = var.user_name
+  name_prefix = "saopaulo-user"
   db_creds = jsondecode(data.aws_secretsmanager_secret_version.my_db_secret_current.secret_string)
 
 }
@@ -41,8 +41,10 @@ module "compute" {
 
   alarm_actions = [aws_sns_topic.my_sns_topic.arn]
   ok_actions    = [aws_sns_topic.my_sns_topic.arn]
+  instance_profile_name = "saopaulo-instance-profile02"
 
   secret_arn = data.aws_secretsmanager_secret.my_db_secret.arn
+  cw_policy_name        = "saopaulo-cw-put-db-conn-metric2"
 
   tags = { env = "saopaulo" }
 }
@@ -60,7 +62,7 @@ resource "aws_route" "sp_to_tokyo_via_tgw" {
 
 ############# CLOUDWATCH LOG GROUP ##############
 resource "aws_cloudwatch_log_group" "my_log_group" {
-  name              = "/aws/ec2/lab-rds-app"
+  name              = "/aws/ec2/${var.region_name}-lab-rds-app"
   retention_in_days = 7
 }
 
@@ -236,6 +238,7 @@ resource "aws_ec2_transit_gateway_peering_attachment" "to_tokyo" {
 
 # Route Tokyo CIDR across the TGW peering attachment
 resource "aws_ec2_transit_gateway_route" "sp_tgw_to_tokyo" {
+  count                          = var.enable_tokyo_route ? 1 : 0
   destination_cidr_block         = "10.90.0.0/16"
   transit_gateway_route_table_id = aws_ec2_transit_gateway.liberdade_tgw01.association_default_route_table_id
   transit_gateway_attachment_id  = aws_ec2_transit_gateway_peering_attachment.to_tokyo.id

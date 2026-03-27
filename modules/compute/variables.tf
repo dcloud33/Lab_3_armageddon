@@ -36,12 +36,27 @@ variable "private_subnet_ids" {
     type = list(string)
     }
 
-variable "ami_id" { type = string }
-variable "instance_type" { type = string }
+variable "ami_id" { 
+  type = string
+   }
+
+variable "instance_type" { 
+  type = string 
+  }
+
+variable "instance_profile_name" {
+  type        = string
+  description = "Name of the EC2 instance profile"
+}
 
 variable "user_data" {
   type        = string
   description = "Plaintext user_data; module base64encodes"
+}
+
+variable "cw_policy_name" {
+  type        = string
+  description = "Name of the CloudWatch custom IAM policy"
 }
 
 variable "origin_secret" { type = string }

@@ -237,7 +237,7 @@ resource "aws_iam_role" "ec2_role" {
 
 ############ INSTANCE PROFILE ###############
 resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "my-instance-profile02"
+  name = var.instance_profile_name
   role = aws_iam_role.ec2_role.name
 }
 
@@ -276,23 +276,8 @@ resource "aws_iam_role_policy" "ec2_read_secret" {
 }
 
 resource "aws_iam_policy" "cw_put_metric" {
-  name = "cw-put-db-conn-metric2"
-  
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect   = "Allow"
-        Action   = "cloudwatch:PutMetricData"
-        Resource = "*"
-        Condition = {
-          StringEquals = {
-            "cloudwatch:namespace" = "Lab3/RDSApp"
-          }
-        }
-      }
-    ]
-  })
+  name   = var.cw_policy_name
+  policy = data.aws_iam_policy_document.cw_put_metric.json
 }
 
 

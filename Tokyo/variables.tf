@@ -9,6 +9,10 @@ variable "aws_region" {
   default     = "ap-northeast-1"
 }
 
+variable "region_name"{
+  type = string
+  default = "tokyo"
+}
 
 variable "instance_type" {
   description = "EC2 instance size for the app."
