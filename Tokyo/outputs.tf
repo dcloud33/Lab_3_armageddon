@@ -45,3 +45,8 @@ output "tokyo_rds_secret_arn" {
 output "tokyo_account_id" {
   value = data.aws_caller_identity.aws_caller.account_id
 }
+
+# Transit Gate Way
+output "tokyo_tgw_id" {
+  value = aws_ec2_transit_gateway.tokyo_tgw.id
+}

@@ -87,9 +87,9 @@ resource "aws_sns_topic_subscription" "my_sns_sub01" {
 #   secret_id = data.aws_secretsmanager_secret.my_db_secret.id
 # }
 
-locals {
-  db = jsondecode(data.aws_secretsmanager_secret_version.my_db_secret_version.secret_string)
-}
+# locals {
+#   db = jsondecode(data.aws_secretsmanager_secret_version.my_db_secret_version.secret_string)
+# }
 
 
 ################### CLOUDWATCH DASHBOARD ########################
