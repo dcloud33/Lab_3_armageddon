@@ -342,7 +342,7 @@ allow_overwrite = true
 
 ######## APEX
 resource "aws_route53_record" "apex" {
-  zone_id = data.aws_route53_zone.main.zone_id
+  zone_id = local.my_zone_id
   name    = var.domain_name
   type    = "A"
 
