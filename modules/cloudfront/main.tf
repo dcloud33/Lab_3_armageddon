@@ -14,7 +14,7 @@ data "aws_caller_identity" "aws_caller" {}
 
 locals {
   # Explanation: Chewbacca needs a home planet—Route53 hosted zone is your DNS territory.
-  my_zone_name = var.domain_name
+  my_zone_name = "${var.app_subdomain}.${var.domain_name}"
 
   # Explanation: Use either Terraform-managed zone or a pre-existing zone ID (students choose their destiny).
   my_zone_id = var.manage_route53_in_terraform ? aws_route53_zone.my_zone[0].zone_id : var.route53_hosted_zone_id
@@ -333,6 +333,19 @@ resource "aws_route53_record" "chewbacca_app_to_cf01" {
   name    = "${var.app_subdomain}.${var.domain_name}"
   type    = "A"
 allow_overwrite = true
+  alias {
+    name                   = aws_cloudfront_distribution.my_cf.domain_name
+    zone_id                = aws_cloudfront_distribution.my_cf.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
+######## APEX
+resource "aws_route53_record" "apex" {
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = var.domain_name
+  type    = "A"
+
   alias {
     name                   = aws_cloudfront_distribution.my_cf.domain_name
     zone_id                = aws_cloudfront_distribution.my_cf.hosted_zone_id
