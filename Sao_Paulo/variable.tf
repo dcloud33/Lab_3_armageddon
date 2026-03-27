@@ -4,7 +4,7 @@ variable "aws_region" {
 }
 
 variable "region_name"{
-  type = strinig
+  type = string
   default = "saopaulo"
 }
 
