@@ -48,5 +48,5 @@ output "tokyo_account_id" {
 
 # Transit Gate Way
 output "tokyo_tgw_id" {
-  value = aws_ec2_transit_gateway.tokyo_tgw.id
+  value = aws_ec2_transit_gateway.tgw.id
 }
