@@ -275,6 +275,21 @@ resource "aws_iam_role_policy" "ec2_read_secret" {
   })
 }
 
+
+data "aws_iam_policy_document" "cw_put_metric" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "cloudwatch:PutMetricData"
+    ]
+
+    resources = ["*"]
+  }
+}
+
+
+
 resource "aws_iam_policy" "cw_put_metric" {
   name   = var.cw_policy_name
   policy = data.aws_iam_policy_document.cw_put_metric.json
