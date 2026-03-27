@@ -46,7 +46,18 @@ output "tokyo_account_id" {
   value = data.aws_caller_identity.aws_caller.account_id
 }
 
+###################################
+# TRANSIT GATEWAY
+###################################
 # Transit Gate Way
 output "tokyo_tgw_id" {
   value = aws_ec2_transit_gateway.tgw.id
+}
+
+###################################
+# ALB
+###################################
+output "tokyo_alb_dns_name" {
+  description = "Tokyo ALB DNS name"
+  value       = module.compute.alb_dns_name
 }
