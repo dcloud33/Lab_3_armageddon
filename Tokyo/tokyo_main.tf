@@ -242,7 +242,7 @@ resource "aws_ec2_transit_gateway_route" "tokyo_to_saopaulo_via_peering" {
 
 
 resource "aws_route" "to_saopaulo_via_tgw" {
-  for_each = var.enable_saopaulo_accept ? toset(module.network.private_route_table_ids) : toset([])
+  for_each = var.enable_saopaulo_accept ? toset(module.network.private_route_table_id) : toset([])
   route_table_id         = each.value
   destination_cidr_block = data.terraform_remote_state.saopaulo.outputs.sp_vpc_cidr
   transit_gateway_id     = aws_ec2_transit_gateway.tgw.id
