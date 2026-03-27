@@ -303,8 +303,8 @@ resource "aws_route53_record" "acm_verification_record" {
 
 # Explanation: This is the holographic sign outside the cantina—app.chewbacca-growl.com points to your ALB.
 resource "aws_route53_record" "piecourse_subdomain" {
-  zone_id = data.aws_route53_zone.piecourse.id
-  name    = "piecourse.com"
+  zone_id = local.my_zone_id
+  name    = "${var.app_subdomain}.${var.domain_name}"
   type    = "A"
 
   alias {
