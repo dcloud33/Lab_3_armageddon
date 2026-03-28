@@ -11,6 +11,8 @@ pipeline {
         choice(name: 'ACTION', choices: ['plan', 'apply', 'destroy'], description: 'Terraform action')
         booleanParam(name: 'ENABLE_SAOPAULO_ACCEPT', defaultValue: false, description: 'Used only for Tokyo stack')
         booleanParam(name: 'CONFIRM_DESTROY', defaultValue: false, description: 'Must be true to allow destroy')
+        booleanParam(name: 'ENABLE_TOKYO_ROUTE', defaultValue: true, description: 'Enable TGW route from Sao Paulo to Tokyo'
+)
     }
 
     environment {
