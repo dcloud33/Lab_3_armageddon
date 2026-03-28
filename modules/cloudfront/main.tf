@@ -89,23 +89,23 @@ resource "aws_cloudfront_distribution" "my_cf" {
   # Primary: São Paulo
   # Failover: Tokyo
   ########################################
-  origin_group {
-    origin_id = "lab-origin-group01"
+#   origin_group {
+#     origin_id = "lab-origin-group01"
 
-   failover_criteria {
-  status_codes = [500, 502, 503, 504]
-}
+#    failover_criteria {
+#   status_codes = [500, 502, 503, 504]
+# }
 
 
-    member { origin_id = "sp-alb-origin" }
-    member { origin_id = "tokyo-alb-origin" }
-  }
+#     member { origin_id = "sp-alb-origin" }
+#     member { origin_id = "tokyo-alb-origin" }
+#   }
 
   ########################################
   # Behaviors target the ORIGIN GROUP now
   ########################################
   default_cache_behavior {
-    target_origin_id       = "lab-origin-group01"
+    target_origin_id       = "sp-alb-origin"
     viewer_protocol_policy = "redirect-to-https"
 
     allowed_methods = ["GET","HEAD","OPTIONS"]
@@ -117,7 +117,7 @@ resource "aws_cloudfront_distribution" "my_cf" {
 
 ordered_cache_behavior {
   path_pattern     = "/init*"
-  target_origin_id = "lab-origin-group01"
+  target_origin_id = "sp-alb-origin"
 
   viewer_protocol_policy = "redirect-to-https"
   allowed_methods        = ["GET","HEAD","OPTIONS"]
@@ -132,7 +132,7 @@ ordered_cache_behavior {
 
   ordered_cache_behavior {
     path_pattern           = "/api/public-feed"
-    target_origin_id       = "lab-origin-group01"
+    target_origin_id       = "sp-alb-origin"
     viewer_protocol_policy = "redirect-to-https"
 
     allowed_methods = ["GET","HEAD","OPTIONS"]
@@ -144,7 +144,7 @@ ordered_cache_behavior {
 
   ordered_cache_behavior {
     path_pattern           = "/api/*"
-    target_origin_id       = "lab-origin-group01"
+    target_origin_id       = "sp-alb-origin"
     viewer_protocol_policy = "redirect-to-https"
 
     allowed_methods = ["GET","HEAD","OPTIONS"]
@@ -156,7 +156,7 @@ ordered_cache_behavior {
 
   ordered_cache_behavior {
     path_pattern           = "/static/index.html"
-    target_origin_id       = "lab-origin-group01"
+    target_origin_id       = "sp-alb-origin"
     viewer_protocol_policy = "redirect-to-https"
 
     allowed_methods = ["GET","HEAD","OPTIONS"]
@@ -169,7 +169,7 @@ ordered_cache_behavior {
 
   ordered_cache_behavior {
     path_pattern           = "/static/manifest.json"
-    target_origin_id       = "lab-origin-group01"
+    target_origin_id       = "sp-alb-origin"
     viewer_protocol_policy = "redirect-to-https"
 
     allowed_methods = ["GET","HEAD","OPTIONS"]
@@ -182,7 +182,7 @@ ordered_cache_behavior {
 
   ordered_cache_behavior {
     path_pattern           = "/static/*"
-    target_origin_id       = "lab-origin-group01"
+    target_origin_id       = "sp-alb-origin"
     viewer_protocol_policy = "redirect-to-https"
 
     allowed_methods = ["GET","HEAD","OPTIONS"]
