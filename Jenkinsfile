@@ -120,12 +120,14 @@ pipeline {
                               terraform -chdir=Sao_Paulo plan \
                                 -destroy \
                                 -input=false \
+                                -var="enable_tokyo_route=${params.ENABLE_TOKYO_ROUTE}" \
                                 -out=tfplan
                             '''
                         } else {
                             sh '''
                               terraform -chdir=Sao_Paulo plan \
                                 -input=false \
+                                -var="enable_tokyo_route=${params.ENABLE_TOKYO_ROUTE}" \
                                 -out=tfplan
                             '''
                         }
