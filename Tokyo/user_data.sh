@@ -197,7 +197,7 @@ def api_list():
 
 @app.route("/api/public-feed")
 def public_feed():
-    return list_items()
+    return list_notes()
 
 @app.route("/static/<path:filename>")
 def static_files(filename):
